@@ -14,7 +14,7 @@ Build parameters:
 Commands:
 ¦Type¦Command                                 ¦Explanation                                          ¦
 ¦----¦----------------------------------------¦-----------------------------------------------------¦
-¦TCP ¦LS<0><1>L<bytes>                        ¦load bitmap to internal storage                 ¦
+¦TCP ¦LS<0><1>L<bytes>                        ¦load bitmap to internal storage                      ¦
 ¦TCP ¦LS<0><1>S<delay LSB><delay MSB>         ¦show loaded bitmap file with <delay> ms between lines¦
 ¦TCP ¦LS<0><1>U                               ¦switch mode to udp                                   ¦
 ¦TCP ¦LS<0><1>D<byte>                         ¦set debug mode                                       ¦
