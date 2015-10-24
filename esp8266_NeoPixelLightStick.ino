@@ -68,6 +68,8 @@ int statCounter = 0;
 #define STAT_ENDED 2
 #define STAT_DELAY 3
 
+#define BUTTONPIN 0
+
 
 int height;
 int width;
@@ -116,6 +118,27 @@ void setup() {
   tcp.begin();
 
   NeoPixelLightStick.black(NeoPixelLightStick._maxPixelCount);
+  delay(500);
+
+  for (int i = 0; i < 4; i++) {
+    byte octet = WiFi.localIP()[i];
+    Serial.println(octet);
+    if (octet / 100 > 0) {
+      NeoPixelLightStick.setColor(i * 9, 255, 0, 0);
+    } else {
+      NeoPixelLightStick.setColor(i * 9, 255 / 127, 0, 0);
+    }
+    octet = octet % 100;
+    showDigit(0, 255, 0, octet / 10, i * 9 + 1);
+    octet = octet % 10;
+    showDigit(0, 0, 255, octet, i * 9 + 5);
+  }
+  NeoPixelLightStick.setColor(4 * 9 + 1, 255/ 6, 0, 0);
+  NeoPixelLightStick.setColor(4 * 9 + 2, 0, 255/ 6, 0);
+  NeoPixelLightStick.setColor(4 * 9 + 3, 0, 0, 255/ 6);
+  NeoPixelLightStick.show();
+
+  pinMode(BUTTONPIN, INPUT_PULLUP); 
   
   Serial.println(F("initialized"));
 }
@@ -134,6 +157,10 @@ void loop() {
       mode = MODE_TCP;
       break;
   }
+  if (!digitalRead(BUTTONPIN)) {
+    NeoPixelLightStick.black(NeoPixelLightStick._maxPixelCount);
+    delay(500);
+  }
 }
 
 
@@ -141,6 +168,34 @@ void showProgress(byte r, byte g, byte b, int value, int maxValue) {
   NeoPixelLightStick.setColor(value % maxValue, r, g, b);
   NeoPixelLightStick.setColor((value + maxValue - 1) % maxValue, 0x00, 0x00, 0x00);
   NeoPixelLightStick.show();
+}
+
+
+void showDigit(byte r, byte g, byte b, int value, int pos) {
+  byte hr, hg, hb, lr, lg, lb;
+  if (value <= 5) {
+    hr = r / 6;
+    hg = g / 6;
+    hb = b / 6;
+    lr = r / 127;
+    lg = g / 127;
+    lb = b / 127;
+  } else {
+    hr = r;
+    hg = g;
+    hb = b;
+    lr = r / 6;
+    lg = g / 6;
+    lb = b / 6;    
+    value = value - 5;
+  }
+  for (int i = 0; i < 4; i++) {
+    if (i < value) {
+      NeoPixelLightStick.setColor(pos + i, hr, hg, hb);
+    } else {
+      NeoPixelLightStick.setColor(pos + i, lr, lg, lb);
+    }
+  }
 }
 
 
