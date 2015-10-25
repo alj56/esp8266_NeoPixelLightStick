@@ -123,8 +123,10 @@ void setup() {
   for (int i = 0; i < 4; i++) {
     byte octet = WiFi.localIP()[i];
     Serial.println(octet);
-    if (octet / 100 > 0) {
+    if (octet / 100 > 1) {
       NeoPixelLightStick.setColor(i * 9, 255, 0, 0);
+    } else if (octet / 100 > 0) {
+      NeoPixelLightStick.setColor(i * 9, 255 / 6, 0, 0);
     } else {
       NeoPixelLightStick.setColor(i * 9, 255 / 127, 0, 0);
     }
